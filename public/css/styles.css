@@ -3,17 +3,25 @@ html {
 }
 
 body {
-  background-image: linear-gradient(to bottom, #187498, #36AE7C);
+  background-image: linear-gradient(to bottom, #187498, #36ae7c);
   background-repeat: no-repeat;
   background-attachment: fixed;
+  font-family: "Quicksand", sans-serif;
   height: 100%;
   margin: 0;
 }
 
 /* Landing page */
-
 #landing {
   padding: 3% 15% 0;
+  position: relative;
+  min-height: 100vh;
+}
+
+.landing-text,
+.landing-text:hover {
+  text-decoration: none;
+  color: inherit;
 }
 
 .landing-content {
@@ -23,25 +31,31 @@ body {
 .logo {
   font-family: "Indie Flower", sans-serif;
   font-size: 2.5rem;
+  color: white;
+}
+
+.landing-logo {
+  text-align: center;
+}
+
+.landing-logo .logo {
+  font-size: 4rem;
 }
 
 .big-heading {
-  font-family: "Quicksand", sans-serif;
   padding: 3% 0 1%;
   color: white;
 }
 
 .small-heading {
-  font-family: "Quicksand", sans-serif;
   font-size: 1rem;
   padding: 2% 0 3%;
   color: white;
 }
 
 .start-button {
-  font-family: "Quicksand", sans-serif;
   margin: 7% 0 0;
-  text-align:center;
+  text-align: center;
 }
 
 .button-container {
@@ -55,7 +69,116 @@ body {
 }
 
 /* Footer */
-
 #footer {
-  margin: 7% 0 0;
+  position: absolute;
+  bottom: 0;
+  width: 70%;
+}
+
+#footer p {
+  color: lightgray;
+}
+
+/* Login page */
+
+.login-form {
+  display: flex;
+  width: 25%;
+  justify-content: center;
+  margin-top: 200px;
+}
+
+.login-form h2,
+h5 {
+  text-align: center;
+  color: white;
+  margin-bottom: 10px;
+}
+
+.submit-button {
+  text-align: center;
+}
+
+/* Register page */
+
+.google-button {
+  text-align: center;
+}
+
+/* About page */
+
+.about-page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 3%;
+}
+
+.about-wrap {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  width: 100%;
+  justify-content: center;
+}
+
+.about-content p {
+  color: lightgray;
+  font-size: 1rem;
+}
+.about-content h2 {
+  color: white;
+  margin: 2% 0 3% 0;
+  text-align: center;
+}
+
+/* Future work page */
+
+.future-work {
+  text-align: center;
+  color: white;
+  margin-top: 10%;
+  width: 100%;
+}
+
+/* Pomodoro Timer Page */
+.timer-section {
+  text-align: center;
+  width: 50%;
+  color: white;
+  margin: 3% auto auto;
+}
+
+.pomodoro-heading {
+  margin: 0 0 7%;
+  font-size: 2rem;
+}
+
+.pomodoro-cycles {
+  color: #ffa45b;
+}
+
+.pomodoro-timer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 2.5rem;
+}
+
+/* Chain habit tracker page */
+
+.chain-container {
+  text-align: center;
+  margin: 50px auto;
+  width: 50%;
+  color: white;
+}
+
+.chain-main {
+  width: 70%;
+  margin: 0 auto;
+}
+
+.chain-header h2,
+p {
+  color: lightgray;
 }
