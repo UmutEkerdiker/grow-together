@@ -1,27 +1,36 @@
 <%- include("partials/header"); -%>
 
 <div class="chain-container">
-    <div class="chain-header">
-        <h1>Start building habits!</h1>
+  <div class="chain-header">
+    <h1>Start building habits!</h1>
     <h2>Add your chains here!</h2>
-    <p>Research shows that 14 days are enough to start forming habits.
-     This tool allows you too keep track of your habits and help you complete them daily!</p>
+    <p>
+      Research shows that 14 days are enough to start forming habits. This tool
+      allows you too keep track of your habits and help you complete them daily!
+    </p>
+  </div>
+  <form id="chain-form" action="/chain" method="POST">
+    <div class="row chain-main">
+      <div class="col-lg-6">
+        <input
+          name="newChain"
+          type="text"
+          class="form-control"
+          placeholder="Chain Name"
+        />
+      </div>
+      <div class="col-lg-6">
+        <button class="btn btn-md btn-dark" type="submit">Add New Chain</button>
+      </div>
     </div>
-    <form id="chain-form">
-        <div class="row chain-main">
-            <div class="col-lg-6">
-                <input type="text" class="form-control" id="chain-name" placeholder="Chain Name">
-            </div>
-            <div class="col-lg-6">
-                <button class="btn btn-md btn-dark" type="submit" id="add-chain">Add New Chain</button>
-            </div>        
-        </div>
-    </form>
-    <div id="my-chains">
-        <h5 id = "chain-header"></h5>
-    </div>
+  </form>
+
+  <div class="my-chains">
+    <%userChains.forEach((chain) => { %>
+    <h5 class="chain-header"><%=chain.chainName%></h5>
+    <%});%>
+  </div>
 </div>
 
-
-<script type="text/javascript" src="/scripts/chain.js"></script>
+<!-- <script type="text/javascript" src="/scripts/chain.js"></script> -->
 <%- include("partials/footer"); -%>

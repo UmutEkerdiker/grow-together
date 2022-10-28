@@ -46,12 +46,15 @@ const userSchema = new mongoose.Schema({
   password: String,
   googleId: String,
   pomodoroStreak: Number,
-  chains: {
-    chainName: String,
-    streak: Number,
-  },
+  chains: [
+    {
+      chainName: String,
+      streak: Number,
+    },
+  ],
 });
 
+//Insert passportLocalMongoose and findOrCreate Plugins
 userSchema.plugin(passportLocalMongoose);
 userSchema.plugin(findOrCreate);
 
@@ -59,6 +62,7 @@ const User = mongoose.model("User", userSchema);
 
 passport.use(User.createStrategy());
 
+//Serialise and deserialise user
 passport.serializeUser(function (user, done) {
   done(null, user);
 });
@@ -67,6 +71,7 @@ passport.deserializeUser(function (user, done) {
   done(null, user);
 });
 
+//Create Google strategy, according to Oauth2.0 Google authentication documentation
 passport.use(
   new GoogleStrategy(
     {
@@ -96,7 +101,7 @@ app.get(
   }
 );
 
-//authentication routes and checks using passportjs
+//authentication routes and checks using passport.js
 app.get("/login", function (req, res) {
   if (req.isAuthenticated()) {
     res.render("home");
@@ -174,10 +179,35 @@ app.get("/about", function (req, res) {
 
 app.get("/chain", function (req, res) {
   if (req.isAuthenticated()) {
-    res.render("chain");
+    User.findById(req.user._id, function (err, foundUser) {
+      if (err) {
+        console.log(err);
+      } else if (foundUser) {
+        res.render("chain", { userChains: foundUser.chains });
+      }
+    });
   } else {
     res.redirect("/login");
   }
+});
+
+app.post("/chain", function (req, res) {
+  const newChainName = req.body.newChain;
+  console.log(newChainName);
+  console.log(req.user._id);
+  User.findById(req.user._id, function (err, foundUser) {
+    if (err) {
+      console.log(err);
+    } else if (foundUser) {
+      foundUser.chains.push({
+        chainName: newChainName,
+        streak: 1,
+      });
+      foundUser.save(function () {
+        res.redirect("/chain");
+      });
+    }
+  });
 });
 
 app.get("/future", function (req, res) {
