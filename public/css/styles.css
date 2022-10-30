@@ -182,3 +182,21 @@ h5 {
 p {
   color: lightgray;
 }
+
+.chains-wrapper {
+  padding: 1rem;
+  background: linear-gradient(to right, red, purple);
+  padding: 3px;
+  margin-top: 20px;
+}
+
+.my-chains {
+  /* background-image: url("../kagami.jpg");
+  background-size: 100% 100%; */
+  background: black;
+  padding: 1rem;
+}
+
+.chain-item {
+  margin-bottom: 20px;
+}

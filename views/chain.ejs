@@ -9,7 +9,7 @@
       allows you too keep track of your habits and help you complete them daily!
     </p>
   </div>
-  <form id="chain-form" action="/chain" method="POST">
+  <form action="/chain" method="POST">
     <div class="row chain-main">
       <div class="col-lg-6">
         <input
@@ -20,17 +20,36 @@
         />
       </div>
       <div class="col-lg-6">
-        <button class="btn btn-md btn-dark" type="submit">Add New Chain</button>
+        <button class="btn btn-md btn-dark" type="submit" name="submit" value="add">Add New Chain</button>
       </div>
     </div>
   </form>
+    <div class="chains-wrapper">
+      <div class="my-chains">
+        <!-- Loop through chains array and display each -->
+        <%userChains.forEach(function(chain, index) { %>
+        <div class="chain-item">
+          <form action="/chainDisplay" method="POST">
+            <h5 class="chain-header"><span><%=chain.chainName%></span><span> (Current Streak: <strong><%=chain.streak%></strong> days)</span></h5>
+            <button type="submit" name="submit" value="decrease"><i class="fa-solid fa-minus"></i></button> 
+            <button type="submit" name="submit" value="increase"><i class="fa-solid fa-plus"></i></button>
+            <input type="hidden" name="secret" value="<%=chain.chainName%>">
+            <input type="hidden" name="currentId" value="<%=chain._id%>">
+            <input type="hidden" name="currentStreak" value="<%=chain.streak%>">
+            <span>
+            <!-- Display the right amount of trophy icons based on user's streak number -->
+            <%for(i=0; i<chain.streak; i++){%>
+              <i class="fa-solid fa-trophy"></i>
+            <%}%>
+            </span>
+            <hr class="chain-hr">
+          </form>
+        </div>
+            <%});%>
+      </div>
+    </div>
+  
 
-  <div class="my-chains">
-    <%userChains.forEach((chain) => { %>
-    <h5 class="chain-header"><%=chain.chainName%></h5>
-    <%});%>
-  </div>
+  
 </div>
-
-<!-- <script type="text/javascript" src="/scripts/chain.js"></script> -->
 <%- include("partials/footer"); -%>

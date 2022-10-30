@@ -41,17 +41,17 @@ async function main() {
   await mongoose.connect("mongodb://localhost:27017/growTogetherDB");
 }
 
+const chainSchema = new mongoose.Schema({
+  chainName: String,
+  streak: Number,
+});
+
 const userSchema = new mongoose.Schema({
   email: String,
   password: String,
   googleId: String,
   pomodoroStreak: Number,
-  chains: [
-    {
-      chainName: String,
-      streak: Number,
-    },
-  ],
+  chains: [chainSchema],
 });
 
 //Insert passportLocalMongoose and findOrCreate Plugins
@@ -59,6 +59,7 @@ userSchema.plugin(passportLocalMongoose);
 userSchema.plugin(findOrCreate);
 
 const User = mongoose.model("User", userSchema);
+const Chain = mongoose.model("Chain", chainSchema);
 
 passport.use(User.createStrategy());
 
@@ -87,11 +88,13 @@ passport.use(
   )
 );
 
+//Google authorisation page route
 app.get(
   "/auth/google",
   passport.authenticate("google", { scope: ["profile"] })
 );
 
+//if Google auth fails redirect to login page
 app.get(
   "/auth/google/grow-together",
   passport.authenticate("google", { failureRedirect: "/login" }),
@@ -118,14 +121,7 @@ app.get("/register", function (req, res) {
   }
 });
 
-app.get("/home", function (req, res) {
-  if (req.isAuthenticated()) {
-    res.render("home");
-  } else {
-    res.redirect("/login");
-  }
-});
-
+//Log in user using passport local method
 app.post("/login", function (req, res) {
   const user = new User({
     email: req.body.username,
@@ -143,6 +139,7 @@ app.post("/login", function (req, res) {
   });
 });
 
+//Create new user using passport local method
 app.post("/register", function (req, res) {
   User.register(
     { username: req.body.username },
@@ -160,7 +157,15 @@ app.post("/register", function (req, res) {
   );
 });
 
-//Page routing
+//Page routing after checking for authentication
+app.get("/home", function (req, res) {
+  if (req.isAuthenticated()) {
+    res.render("home");
+  } else {
+    res.redirect("/login");
+  }
+});
+
 app.get("/", function (req, res) {
   if (req.isAuthenticated()) {
     res.render("home");
@@ -177,6 +182,23 @@ app.get("/about", function (req, res) {
   }
 });
 
+app.get("/future", function (req, res) {
+  if (req.isAuthenticated()) {
+    res.render("future");
+  } else {
+    res.redirect("/login");
+  }
+});
+
+app.get("/pomodoro", function (req, res) {
+  if (req.isAuthenticated()) {
+    res.render("pomodoro");
+  } else {
+    res.redirect("/login");
+  }
+});
+
+//If user is authenticated render chain page with their chains displayed
 app.get("/chain", function (req, res) {
   if (req.isAuthenticated()) {
     User.findById(req.user._id, function (err, foundUser) {
@@ -191,38 +213,53 @@ app.get("/chain", function (req, res) {
   }
 });
 
+//Adding new chain to the user schema with 0 streak to begin with.
 app.post("/chain", function (req, res) {
   const newChainName = req.body.newChain;
-  console.log(newChainName);
-  console.log(req.user._id);
-  User.findById(req.user._id, function (err, foundUser) {
-    if (err) {
-      console.log(err);
-    } else if (foundUser) {
-      foundUser.chains.push({
-        chainName: newChainName,
-        streak: 1,
-      });
-      foundUser.save(function () {
-        res.redirect("/chain");
-      });
-    }
-  });
-});
-
-app.get("/future", function (req, res) {
-  if (req.isAuthenticated()) {
-    res.render("future");
-  } else {
-    res.redirect("/login");
+  if (req.body.submit === "add") {
+    console.log(req.body.submit);
+    User.findById(req.user._id, function (err, foundUser) {
+      if (err) {
+        console.log(err);
+      } else if (foundUser) {
+        foundUser.chains.push({
+          chainName: newChainName,
+          streak: 0,
+        });
+        foundUser.save(function () {
+          res.redirect("/chain");
+        });
+      }
+    });
   }
 });
 
-app.get("/pomodoro", function (req, res) {
-  if (req.isAuthenticated()) {
-    res.render("pomodoro");
-  } else {
-    res.redirect("/login");
+//Increasing or decreasing the specific chain's streak when + or - buttons are clicked
+app.post("/chainDisplay", function (req, res) {
+  const clickedChain = req.body.secret;
+  const clickedButton = req.body.submit;
+  const clickedId = clickedChain.currentId;
+
+  if (clickedButton === "increase") {
+    User.findOneAndUpdate(
+      { id: req.user._id, "chains.chainName": clickedChain },
+      { $inc: { "chains.$.streak": 1 } },
+      function (err, foundUser) {
+        if (!err) {
+          res.redirect("/chain");
+        }
+      }
+    );
+  } else if (clickedButton === "decrease") {
+    User.findOneAndUpdate(
+      { id: req.user._id, "chains.chainName": clickedChain },
+      { $inc: { "chains.$.streak": -1 } },
+      function (err, foundUser) {
+        if (!err) {
+          res.redirect("/chain");
+        }
+      }
+    );
   }
 });
 
