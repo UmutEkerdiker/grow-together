@@ -24,14 +24,14 @@ I've used passportjs for local and Google authentication methods to implement us
 I've simply created a script using JavaScript to create a timer that will countdown from 25 minutes and will give you a 5 minute break. It will also count
 the number of cycles you've gone through. I aim to connect this functionality with back-end to display the total number of cycles users' have studied so far
 and create a leaderboard.
-<br>
+
 ![pomodoro](https://user-images.githubusercontent.com/34137527/198884917-4f587c44-57c7-4e9d-9947-eb77a8e695e7.PNG)
 
 <h3>Don't Break the Chain</h3>
 This was my favourite functionality to create! You add a new chain, and increase or decrease the subsequent days you've completed to form your habits and
 keep yourself accountable! It is stored in the back-end, so your progress will stay there, no worries! It will also tell you your current streak and display
 thropies for each day you compeleted your task!
-<br>
+
 ![chain](https://user-images.githubusercontent.com/34137527/198885016-17a4e2ea-9c5e-4bf1-92db-95a1c21ae452.PNG)
 
 Feel free to reach out to me for future functionalities. I aim to improve the design and styling in the upcoming days!
